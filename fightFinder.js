@@ -8,9 +8,6 @@ var request = require("request");
 //===================
 //FUNCTIONS TO EXPORT
 //===================
-//. For simplicity, perhaps you should just have your API hit up the first result
-//    on the results page...
-//. For now, don't worry about the "Next" link. Just focus on collecting all the results on a single page. 
 /*
   Parses the html of a sherdog fight fighter search results page and
   returns an object representing the first result in the fighter results page.
@@ -18,30 +15,6 @@ var request = require("request");
   @return an object containing the first result of the search (if any).
 */
 function parseSearchResults(html, firstName, lastName) {
-  
-  //var results = []; //Let's just return a single result for now (the topmost one)
-  //A search result will have the name, nickname, weight, and association
-  
-  /*
-  //TODO: Test out a request() call within a request() call
-  request({ uri: "http://www.example.com" }, function(error, response, body) { 
-    var result = body;
-    request({ uri: "http://www.example.com" }, function(error, response, body) {
-      
-      result += body;
-      console.log(result);
-            
-    });
-  });
-  */
-  
-  /*
-  request({ uri: "http://www.example.com" }, function(error, response, body) {
-    
-    console.log("INNER request()");
-    
-  });
-  */
   
   var result = { };
   var $ = cheerio.load(html);
@@ -78,18 +51,6 @@ function getFighterData(fighterObj, res) {
 }
 
 
-//THINK: How to connect a search result view with the view for a particular fighter?
-//  -- Depending on which result the user clicks on, send back another API request 
-//       with a number corresponding to the result's offset? The API itself would
-//       then access the appropriate result on sherdog's fighter finder results page?
-//  -- If you want to just get the very first search result, then you can first call
-//       parseSearchResults(), which you would implement in such a way that it returns
-//       the first result on the result page. It's hard to go directly to the fighter page
-//       that you want because there seems to be a unique ID number associated with a par-
-//       ticular fighter. The search results page needs to be accessed as an intermediate step.
-//       So how about this, let parseSearchResults() send a link to the first fighter's page
-//       and pass that link to this function (thus making another call to request() within a 
-//       request()...which is possible!)
 /*
   Parses the html of a fight fighter page and returns an object containing 
   the fighter's stats, record, and fight history.
@@ -100,22 +61,8 @@ function parseFighterPage(html) {
   
   var $ = cheerio.load(html);
   var fighter = {};
-    
-  //---GETTING THE STATS---
-  //. Get birthday and age info starting from the span with the class called "birthday".
-  //. Get the nationality info from the itemprop attribute with a value of "nationality".
-  //. Get physical stats info starting from the spans with the classes called "height" and "weight".
-  //. Get the association info starting from the a tag with the class called "association" and an itemprop attribute
-  //. Get the weight class info starting from the h6 tag with the class called "wclass".
   parseStats(fighter, $);
-  
-  //---GETTING THE RECORD---
-  //. Try getting record by searching for an element with the text contents: "Wins", "Losses", and "N/C"
   parseRecord(fighter, $);
-  
-  //---GETTING THE FIGHT HISTORY---
-  //. Try getting the fight history from the class labeled fight_history
-  //. fight_history class --> child with class "content" --> table child. This table contains info for single fights
   parseFightHistory(fighter, $);
   
   return fighter;
