@@ -2,7 +2,6 @@
 //"IMPORTS"
 //=========
 var express = require("express");
-var http = require("http");  //for making requests to other servers
 var request = require("request");
 var fightFinder = require("./fightFinder.js");
 
@@ -20,7 +19,8 @@ var app = express();
 //====================
 var port = process.env.PORT || 3000;
 
-//This is for allowing cross-domain requests
+//This is for allowing cross-domain requests. all() will allow the settings, which
+//constitutes the middleware, in the function body to apply for all routes.
 app.all('*', function(req, res, next) {  
   res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE, OPTIONS');
@@ -54,8 +54,8 @@ app.get("/", function(req, res) {
 
 app.get("/data/:fighter", function(req, res) {
   var uri = "http://www.sherdog.com/stats/fightfinder?SearchTxt=";
-  var name = req.params.fighter.split("_");
-  var first_name = name[0];
+  var name = req.params.fighter.split("_"); //user types in "_" in between names in the URL
+  var first_name = name[0]; //Watch out, some fighters might have middle names too...
   var last_name = name[1];
   uri += first_name + "+" + last_name;
   
@@ -77,4 +77,4 @@ app.get("/data/:fighter", function(req, res) {
 //RUN THE SERVER
 //==============
 app.listen(port); //Don't forget to pass in port!
-console.log("LISTENING on port " + port);
+console.log("Listening on port " + port + "...(hope you're using Nodemon!!)");
