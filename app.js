@@ -63,7 +63,7 @@ app.get("/data/:fighter", function(req, res) {
   request({ uri: uri }, function(error, response, body) {
     if (!error) {          
       fighter = fightFinder.parseSearchResults(body, first_name, last_name);
-      fightFinder.getFighterData(fighter, res);
+      fightFinder.getFighterData(fighter, res); //The server's response (res) will be prepared n the getFighterData function
     }
     else {
       //have res send back an error message or something
@@ -76,5 +76,11 @@ app.get("/data/:fighter", function(req, res) {
 //==============
 //RUN THE SERVER
 //==============
-app.listen(port); //Don't forget to pass in port!
+app.listen(port, '0.0.0.0'); //Don't forget to pass in port!
 console.log("Listening on port " + port + "...(hope you're using Nodemon!!)");
+
+/*
+app.listen(3000, '0.0.0.0', function() {
+    console.log('Listening to port:  ' + 3000);
+});
+*/

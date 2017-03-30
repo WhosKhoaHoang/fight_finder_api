@@ -15,12 +15,13 @@ var request = require("request");
   @param res An object representing the HTTP response to be sent back to the client.
 */
 function getFighterData(fighterObj, res) {
-  //Should you leave checking if searcg results exist for here or for the code that calls this function?
+  //Should you leave checking if search results exist for here or for the code that calls this function?
   
   request({ uri: fighterObj.url }, function(error, response, body) {
     
       var fighterData = parseFighterPage(body);    
       res.json(fighterData);
+    
   });
   
 }
@@ -72,6 +73,7 @@ function parseFighterPage(html) {
   //Perhaps I should have a fillFightHistoryStats(fighter) function?
   
   return fighter;
+  
 }
 
 
@@ -86,9 +88,7 @@ function parseFighterPage(html) {
   @param $ The loaded DOM courtesy of cheerio.
 */
 function parseBio(fighter, $) {  
-  
-  //<< TODO: Get fighter's nickname (if any) --DONE!-- >>
-  
+    
   fighter["name"] = $("span.fn").text(); //fn for fighter name. How convenient!
   fighter["nickname"] = $("span.nickname").text();
   fighter["birthday"] = $("span.birthday").children("span[itemprop='birthDate']").text();
@@ -128,7 +128,6 @@ function parseRecord(fighter, $) {
   var drawElement = $("span:contains('Draws').result"); //if none, object will still be returned but w/o a property for a matched element
   fighter["draws"] = Number(drawElement.siblings(".counter").text()); //If fighter has none of these, then numDraws is the empty string
   
-  //<< Added metainformation about a fighter's wins/losses >>
   //Having these extra DOM traversals could slow things down quite a bit...
   var koTkoOutcomes = parseOutcomeType("KO/TKO", $);
   fighter["koTkoWins"] = getOutcomeWins(koTkoOutcomes);
@@ -148,7 +147,6 @@ function parseRecord(fighter, $) {
   fighter["decisionLosses"] = getOutcomeLosses(decisionOutcomes);
   fighter["decisionLossPercent"] = getOutcomeLossPercentage(fighter, "decision");
   
-  console.log("OTHER METHOD WINS: ");
   var otherOutcomes = parseOutcomeType("OTHER", $);
   fighter["otherWins"] = getOutcomeWins(otherOutcomes);
   fighter["otherWinPercent"] = getOutcomeWinPercentage(fighter, "other");
@@ -165,9 +163,7 @@ function parseRecord(fighter, $) {
   @param $ The loaded DOM courtesy of cheerio.
 */
 function parseFightHistory(fighter, $) {
-  
-  //<< TODO: Fix the weird stuff that happens when the fighter has an upcoming fight!!! --DONE-- >>
-  
+    
   //var resultsTable = $(".fight_history").children(".content").children("table");
   var resultsTable = $("h2:contains('Fight History')").parent().siblings(".content").children("table");
   fighter["fightHistory"] = [];
@@ -198,8 +194,7 @@ function parseFightHistory(fighter, $) {
           propIdx++;
         }
       });            
-      fighter["fightHistory"].push(fightInfo);
-      
+      fighter["fightHistory"].push(fightInfo); 
     }
   });
 }
@@ -220,7 +215,7 @@ function titleCase(s) {
   metric units for either height or weight.
   @param heightOrWeight a string with value "height" or "weight".
   @param $ The loaded DOM courtesy of cheerio.
-  @return An object containing height or weight data in customary or metric units.
+  @return An object containing height or weight data in customary and metric units.
 */
 function heightOrWeightParser(heightOrWeight, $) {
   
@@ -228,6 +223,7 @@ function heightOrWeightParser(heightOrWeight, $) {
   result["customary"] = $(`.item.${heightOrWeight}`).children("strong").text(); //non-metric
   var metricInfo = ($(".item."+heightOrWeight).contents().filter(function() { return this.nodeType === 3; }).text())
   result["metric"] = metricInfo.slice(metricInfo.indexOf(titleCase(heightOrWeight))+titleCase(heightOrWeight).length).trim(); //metric
+  console.log(result);
   return result;
   
 }
