@@ -222,8 +222,7 @@ function heightOrWeightParser(heightOrWeight, $) {
   var result = {};
   result["customary"] = $(`.item.${heightOrWeight}`).children("strong").text(); //non-metric
   var metricInfo = ($(".item."+heightOrWeight).contents().filter(function() { return this.nodeType === 3; }).text())
-  result["metric"] = metricInfo.slice(metricInfo.indexOf(titleCase(heightOrWeight))+titleCase(heightOrWeight).length).trim(); //metric
-  console.log(result);
+  result["metric"] = metricInfo.slice(metricInfo.indexOf(titleCase(heightOrWeight))+titleCase(heightOrWeight).length).trim();
   return result;
   
 }
