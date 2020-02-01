@@ -4,26 +4,14 @@
     <meta charset="utf-8"> 
   </head>
   <body>
-  
-  
-    
+      <!-- You can simply open this file with any browser, which will
+           then proceed to run the JavaScript code that will display
+           the results of the API call in the console. -->  
     
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
-    <script type="text/javascript">
-    
-      //console.log("zzazazaza");
+    <script type="text/javascript">     
       
-      /*
-      //Weird, I think I was getting an empty response from the API because of cross-domain request restrictions
-      $.get("http://localhost:3000/", function(data) {
-        //console.log("AHHHH!");
-        console.log(data);
-        
-      }).fail(function(error) { console.log("ERROR: " + JSON.stringify(error))});
-      */
-      
-      
-      $.get("http://localhost:3000/stats/hatsu_hioki", function(data) {  //Make the API call
+      $.get("http://localhost:3000/data/hatsu_hioki", function(data) {  //Make the API call
         //console.log("AHHHH!");
         console.log(data);
         
