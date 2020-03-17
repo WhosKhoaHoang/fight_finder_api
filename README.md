@@ -1,2 +1,2 @@
 # fight_finder_api
-Scrapes Sherdog's fight finder for an athlete's stats, W/L record, and fight history.
+A Node.js API that scrapes Sherdog's fight finder for an athlete's stats, W/L record, and fight history.
